@@ -4,7 +4,6 @@ from .models import Species, Ability
 
 # Register your models here.
 
-admin.site.register(Ability)
 
 class AbilityInLine(admin.TabularInline):
     model=Ability
@@ -24,5 +23,8 @@ class SpeciesAdmin(admin.ModelAdmin):
     ]
     list_display = ('species_name', 'type', 'ability_1', 'ability_2', 'hidden_ability')
 
+class AbilityAdmin(admin.ModelAdmin):
+    list_display = ('ability_name', 'ability_desc')
 
 admin.site.register(Species, SpeciesAdmin)
+admin.site.register(Ability, AbilityAdmin)

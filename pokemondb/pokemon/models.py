@@ -2,44 +2,46 @@ from django.db import models
 
 # Create your models here.
 
+TYPES = (('0', 'Normal'), 
+    ('1', 'Fire'), 
+    ('2', 'Fighting'), 
+    ('3', 'Water'), 
+    ('4', 'Grass'), 
+    ('5', 'Flying'), 
+    ('6', 'Poison'), 
+    ('7', 'Electric'), 
+    ('8', 'Ground'), 
+    ('9', 'Psychic'), 
+    ('10', 'Rock'), 
+    ('11', 'Ice'), 
+    ('12', 'Bug'), 
+    ('13', 'Dragon'), 
+    ('14', 'Ghost'), 
+    ('15', 'Dark'), 
+    ('16', 'Steel'), 
+    ('17', 'Fairy'), 
+    ('18', 'Cyber'),
+)
+EGG_GROUPS = (('0', 'Monster'),
+    ('1', 'Human-Like'),
+    ('2', 'Bug'),
+    ('3', 'Water 1'),
+    ('4', 'Water 2'),
+    ('5', 'Water 3'),
+    ('6', 'Mineral'),
+    ('7', 'Flying'),
+    ('8', 'Amorphous'),
+    ('9', 'Field'),
+    ('10', 'Fairy'),
+    ('11', 'Ditto'),
+    ('12', 'Grass'),
+    ('13', 'Dragon'),
+    ('14', 'Undiscovered'),
+    ('15', 'Gender unknown'),
+)
+
 class Species(models.Model):
-    TYPES = (('0', 'Normal'), 
-        ('1', 'Fire'), 
-        ('2', 'Fighting'), 
-        ('3', 'Water'), 
-        ('4', 'Grass'), 
-        ('5', 'Flying'), 
-        ('6', 'Poison'), 
-        ('7', 'Electric'), 
-        ('8', 'Ground'), 
-        ('9', 'Psychic'), 
-        ('10', 'Rock'), 
-        ('11', 'Ice'), 
-        ('12', 'Bug'), 
-        ('13', 'Dragon'), 
-        ('14', 'Ghost'), 
-        ('15', 'Dark'), 
-        ('16', 'Steel'), 
-        ('17', 'Fairy'), 
-        ('18', 'Cyber'),
-    )
-    EGG_GROUPS = (('0', 'Monster'),
-        ('1', 'Human-Like'),
-        ('2', 'Bug'),
-        ('3', 'Water 1'),
-        ('4', 'Water 2'),
-        ('5', 'Water 3'),
-        ('6', 'Mineral'),
-        ('7', 'Flying'),
-        ('8', 'Amorphous'),
-        ('9', 'Field'),
-        ('10', 'Fairy'),
-        ('11', 'Ditto'),
-        ('12', 'Grass'),
-        ('13', 'Dragon'),
-        ('14', 'Undiscovered'),
-        ('15', 'Gender unknown'),
-    )
+    
     species_name = models.CharField(max_length=30)
     date_added = models.DateTimeField('Date Added')
     type_primary = models.CharField(
@@ -111,6 +113,10 @@ class Species(models.Model):
         if (self.type_secondary is not None):
             bothTypes += "/" + self.get_type_secondary_display()
         return bothTypes
+
+    def typeID(long_name):
+        right_id = [k for k, v in TYPES if v == long_name]
+        return right_id[0]
     
     class Meta:
         verbose_name_plural = 'Species'

@@ -1,0 +1,10 @@
+{% for i in species %}
+    {{ i }} ({{ i.type }})
+    Abilities: {{ i.ability_1 }}
+    {% if i.ability_2 %}
+    - {{ i.ability_2 }} 
+    {% endif %}
+    {% if i.hidden_ability %}
+    -<i> {{ i.hidden_ability }}</i>
+    {% endif %}
+{% endfor %}
