@@ -39,6 +39,13 @@ EGG_GROUPS = (('0', 'Monster'),
     ('14', 'Undiscovered'),
     ('15', 'Gender unknown'),
 )
+REGIONS = (('0', 'Alolan'),
+    ('1', 'Unovan'),
+    ('2', 'Sinnoan'),
+    ('3', 'Galarian'),
+    ('4', 'Zea'),
+    ('5', 'Qinese'),
+)
 
 class Species(models.Model):
     
@@ -103,12 +110,34 @@ class Species(models.Model):
         blank=True,
         null=True,
     )
+    form = models.CharField(
+        max_length=10,
+        default='Base',
+    )
+    regional_variant = models.CharField(
+        max_length=10,
+        choices=REGIONS,
+        blank=True,
+        null=True,
+        default=None
+    )
+    base_HP = models.IntegerField(default=0)
+    base_Attack = models.IntegerField(default=0)
+    base_Defense = models.IntegerField(default=0)
+    base_SpAttack = models.IntegerField(default=0)
+    base_SpDefense = models.IntegerField(default=0)
+    base_Speed = models.IntegerField(default=0)
 
 
     def __str__(self):
-        return self.species_name
+        my_string = self.species_name
+        if self.form != 'Base':
+            my_string += "-" + self.form  
+        if self.regional_variant is not None:
+            my_string =  self.get_regional_variant_display().__str__() + " " + my_string           
+        return my_string
 
-    def type(self):
+    def type_string(self):
         bothTypes = self.get_type_primary_display()
         if (self.type_secondary is not None):
             bothTypes += "/" + self.get_type_secondary_display()
@@ -117,9 +146,21 @@ class Species(models.Model):
     def typeID(long_name):
         right_id = [k for k, v in TYPES if v == long_name]
         return right_id[0]
+
+    def BST(self):
+        return self.base_HP + self.base_Attack + self.base_Defense + self.base_SpAttack + self.base_SpDefense + self.base_Speed
     
+    def name_first(self):
+        my_string = self.species_name
+        if self.form != 'Base':
+            my_string += "-" + self.form  
+        if self.regional_variant is not None:
+            my_string =  my_string + " (" + self.get_regional_variant_display().__str__() + ")"           
+        return my_string
+
     class Meta:
         verbose_name_plural = 'Species'
+        unique_together = ('species_name', 'regional_variant', 'form',)
 
 class Ability(models.Model):
     ability_name = models.CharField('Ability Name', max_length=30)

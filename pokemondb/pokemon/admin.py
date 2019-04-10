@@ -17,11 +17,15 @@ class SpeciesAdmin(admin.ModelAdmin):
         ]}),
         ('Biometric information', {'fields': [
             'min_height', 'max_height',
-            'min_weight', 'max_weight'
+            'min_weight', 'max_weight',
+            'regional_variant',
+            'form',
+            'base_HP', 'base_Attack', 'base_Defense',
+            'base_SpAttack', 'base_SpDefense', 'base_Speed'
         ]}),
         ('Metadata', {'fields': ['date_added']}),
     ]
-    list_display = ('species_name', 'type', 'ability_1', 'ability_2', 'hidden_ability')
+    list_display = ('__str__', 'type_string', 'ability_1', 'ability_2', 'hidden_ability', 'BST')
 
 class AbilityAdmin(admin.ModelAdmin):
     list_display = ('ability_name', 'ability_desc')
