@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Species, Ability
+from .models import Species, Ability, Move, LearnableMove, LevelMove, Location
 
 # Register your models here.
 
@@ -32,3 +32,7 @@ class AbilityAdmin(admin.ModelAdmin):
 
 admin.site.register(Species, SpeciesAdmin)
 admin.site.register(Ability, AbilityAdmin)
+admin.site.register(Move)
+admin.site.register(LevelMove)
+admin.site.register(LearnableMove)
+admin.site.register(Location)

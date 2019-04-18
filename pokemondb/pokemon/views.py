@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
-from .models import Species, Ability
+from .models import Species, Ability, Move, LearnableMove, LevelMove, Location
 
 # root page: shows latest added Pokemon.
 
@@ -20,8 +20,18 @@ def index(request):
     return render(request, 'pokemon/index.html', context)
 
 def speciesDetails(request, pokemon_id):
-    species = get_list_or_404(Species, pk=pokemon_id)
-    return render(request, 'pokemon/speciesDetail.html', {'species': species})
+    species = get_object_or_404(Species, pk=pokemon_id)
+    level_moves = LevelMove.objects.filter(species=species)
+    tm_moves = LearnableMove.objects.filter(species=species, source='1')
+    egg_moves = LearnableMove.objects.filter(species=species, source='2')
+    tutor_moves = LearnableMove.objects.filter(species=species, source='3')
+    locations = Location.objects.filter(available_species=species)
+    return render(request, 'pokemon/speciesDetail.html', {'species': species, 
+        'level_moves' : level_moves, 
+        'tm_moves' : tm_moves,
+        'egg_moves' : egg_moves,
+        'tutor_moves' : tutor_moves,
+        'locations' : locations })
 
 def abilityDetails(request, ability_id):
     ability = get_object_or_404(Ability, pk=ability_id)

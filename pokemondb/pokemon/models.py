@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -45,6 +46,26 @@ REGIONS = (('0', 'Alolan'),
     ('3', 'Galarian'),
     ('4', 'Zea'),
     ('5', 'Qinese'),
+)
+MOVE_CATEGORIES = (('0', 'Status'),
+    ('1', 'Physical'),
+    ('2', 'Special'),
+)
+MOVE_SOURCES = (('0', 'Levelup'),
+    ('1', 'TM'),
+    ('2', 'Hatch'),
+    ('3', 'Tutor'),
+)
+REGION_NAMES = (('0', 'Kanto'),
+('1', 'Johto'),
+('2', 'Hoenn'),
+('3', 'Sinnoh'),
+('4', 'Unova'),
+('5', 'Kalos'),
+('6', 'Alola'),
+('7', 'Galar'),
+('8', 'Qinoa'),
+('9', 'Zan'),
 )
 
 class Species(models.Model):
@@ -172,3 +193,77 @@ class Ability(models.Model):
         
     class Meta:
         verbose_name_plural = 'Abilities'
+
+class Move(models.Model):
+    move_name = models.CharField('Move Name', max_length=30)
+    move_desc = models.CharField('Description', max_length=300)
+    move_type = models.CharField(
+        max_length=10,
+        choices=TYPES,
+        default='Normal')
+    base_power = models.IntegerField('Base Power')
+    base_accuracy = models.IntegerField('Accuracy')
+    move_category = models.CharField(
+        max_length=8,
+        choices=MOVE_CATEGORIES,
+        default='Physical'
+    )
+    TM_number = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.move_name
+    
+    def type_string(self):
+        return self.get_move_type_display()
+
+class LearnableMove(models.Model):
+    move = models.ForeignKey(
+        'Move',
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    species = models.ForeignKey(
+        'Species', 
+        models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    source = models.CharField(
+        max_length=7,
+        choices=MOVE_SOURCES,
+        default='TM'
+    )
+
+    
+    def __str__(self):
+        return self.species.species_name + ": " + self.move.move_name
+
+    class Meta:
+        unique_together = ('move', 'species', 'source')
+
+class LevelMove(LearnableMove):
+    level = models.PositiveIntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(1)
+        ]
+    )
+
+class Location(models.Model):
+    location_name = models.CharField(max_length=30)
+    region=models.CharField(
+        max_length=10,
+        choices=REGION_NAMES,
+        default='Kanto'
+    )
+    available_species = models.ManyToManyField(
+        Species
+    )
+
+    def __str__(self):
+        my_string = self.location_name
+        if (self.region is not None):
+            my_string += ", " + self.get_region_display()
+        return my_string
