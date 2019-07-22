@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'pokemondb'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('<int:pokemon_id>/', views.speciesDetails, name='speciesDetails'),
-    path('ability/<int:ability_id>/', views.abilityDetails, name='abilityDetails'),
+    path('', views.SpeciesList.as_view(), name='index'),
+    path('<int:pk>/', views.SpeciesView.as_view(), name='species_detail'),
+    path('ability/<int:pk>/', views.AbilityView.as_view(), name='ability_detail'),
 ]
