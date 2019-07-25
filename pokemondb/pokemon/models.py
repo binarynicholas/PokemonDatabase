@@ -201,8 +201,8 @@ class Move(models.Model):
         max_length=10,
         choices=TYPES,
         default='Normal')
-    base_power = models.IntegerField('Base Power')
-    base_accuracy = models.IntegerField('Accuracy')
+    base_power = models.IntegerField('Base Power', blank=True, null=True)
+    base_accuracy = models.IntegerField('Accuracy', blank=True, null=True)
     move_category = models.CharField(
         max_length=8,
         choices=MOVE_CATEGORIES,

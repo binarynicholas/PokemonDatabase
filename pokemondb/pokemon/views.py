@@ -9,6 +9,7 @@ from .models import Species, Ability, Move, LearnableMove, LevelMove, Location
 
 class SpeciesList(ListView):
     model = Species
+    context_object_name = 'current_species'
 
     def get_queryset(self):
         return Species.objects.order_by('id')
@@ -25,7 +26,7 @@ class SpeciesList(ListView):
         except (KeyError, Species.DoesNotExist):
             current_species = Species.objects.order_by('id')
         context = { 'current_species' : current_species }
-        return render(request, 'pokemon/index.html', context)
+        return render(request, 'pokemon/species_list.html', context)
 
 
 class SpeciesView(DetailView):
@@ -36,8 +37,8 @@ class SpeciesView(DetailView):
         context = super(SpeciesView, self).get_context_data(**kwargs)
         species = self.object
         context['title'] = species.species_name + " (Pokémon)"
-        context['level_moves'] = LevelMove.objects.filter(species=species)
-        context['tm_moves'] = LearnableMove.objects.filter(species=species, source='1')
+        context['level_moves'] = LevelMove.objects.filter(species=species).order_by('level')
+        context['tm_moves'] = LearnableMove.objects.filter(species=species, source='1').order_by('move__TM_number')
         context['egg_moves'] = LearnableMove.objects.filter(species=species, source='2')
         context['tutor_moves'] = LearnableMove.objects.filter(species=species, source='3')
         context['locations'] = Location.objects.filter(available_species=species)
