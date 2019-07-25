@@ -1,0 +1,14 @@
+{% extends "./base.html" %}
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+{% if current_species %}
+    <ul>
+    {% for species in current_species %}
+        <li><a href="{% url 'pokemondb:species_detail' species.id %}">{{ species.name_first }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No Pokemon matching that description could be found.</p>
+{% endif %}
+{% endblock content %}
