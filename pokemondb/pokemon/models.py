@@ -213,8 +213,11 @@ class Move(models.Model):
     def __str__(self):
         return self.move_name
     
-    def type_string(self):
+    def move_type_string(self):
         return self.get_move_type_display()
+    
+    def move_category_string(self):
+        return self.get_move_category_display()
 
 class LearnableMove(models.Model):
     move = models.ForeignKey(
