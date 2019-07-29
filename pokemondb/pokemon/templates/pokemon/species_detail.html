@@ -28,7 +28,7 @@ By leveling up
 </br>
 {% if level_moves %}
     {% for i in level_moves %}
-        {{ i.level }}: {{ i.move.move_name }} ({{ i.move.type_string }})</br>
+        {{ i.level }}: <a href="{% url 'pokemondb:move_detail' i.move.id %}">{{ i.move.move_name }}</a> ({{ i.move.move_type_string }})</br>
     {% endfor %}
 {% else %}
     This Pokémon learns no moves by level-up.</br>
@@ -38,7 +38,7 @@ By TM
 </br>
 {% if tm_moves %}
     {% for i in tm_moves %}
-        TM{{ i.move.TM_number }}: {{ i.move.move_name }} ({{ i.move.type_string }})</br>
+        TM{{ i.move.TM_number }}: <a href="{% url 'pokemondb:move_detail' i.move.id %}">{{ i.move.move_name }}</a> ({{ i.move.move_type_string }})</br>
     {% endfor %}
 {% else %}
     This Pokémon learns no moves by TM.</br>
@@ -48,7 +48,7 @@ By breeding
 </br>
 {% if egg_moves %}
     {% for i in egg_moves %}
-        {{ i.move.move_name }} ({{ i.move.type_string }})</br>
+        <a href="{% url 'pokemondb:move_detail' i.move.id %}">{{ i.move.move_name }}</a> ({{ i.move.move_type_string }})</br>
     {% endfor %}
 {% else %}
     This Pokémon learns no moves by breeding.</br>
@@ -58,7 +58,7 @@ By move tutor
 </br>
 {% if tutor_moves %}
     {% for i in tutor_moves %}
-        {{ i.move.move_name }} ({{ i.move.type_string }})</br>
+        <a href="{% url 'pokemondb:move_detail' i.move.id %}">{{ i.move.move_name }}</a> ({{ i.move.move_type_string }})</br>
     {% endfor %}
 {% else %}
     This Pokémon learns no moves by tutor.</br>
