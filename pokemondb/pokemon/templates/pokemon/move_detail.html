@@ -1,0 +1,8 @@
+{% extends "./base.html" %}
+{% block content %}
+{{ move }} ({{ move.move_type_string }})</br>
+Category: {{ move.move_category_string }} </br>
+Power: {{ move.base_power }} </br>
+Accuracy: {{ move.base_accuracy }} </br>
+{{ move.move_desc }}
+{% endblock content %}

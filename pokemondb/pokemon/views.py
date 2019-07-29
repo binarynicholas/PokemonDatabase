@@ -53,6 +53,15 @@ class AbilityView(DetailView):
         context['title'] = self.object.ability_name + " (Ability)"
         return context
 
+class MoveView(DetailView):
+    model = Move
+    context_object_name = 'move'
+
+    def get_context_data(self, **kwargs):
+        context = super(MoveView, self).get_context_data(**kwargs)
+        context['title'] = self.object.move_name + " (Move)"
+        return context
+
 def filterSearch(searchterm):
     terms = searchterm.split(" ")
     searches = [t.split(":") for t in terms]
