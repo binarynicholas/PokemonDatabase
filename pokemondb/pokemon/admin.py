@@ -30,9 +30,12 @@ class SpeciesAdmin(admin.ModelAdmin):
 class AbilityAdmin(admin.ModelAdmin):
     list_display = ('ability_name', 'ability_desc')
 
+class MoveAdmin(admin.ModelAdmin):
+    ordering = ('move_name',)
+
 admin.site.register(Species, SpeciesAdmin)
 admin.site.register(Ability, AbilityAdmin)
-admin.site.register(Move)
+admin.site.register(Move, MoveAdmin)
 admin.site.register(LevelMove)
 admin.site.register(LearnableMove)
 admin.site.register(Location)
