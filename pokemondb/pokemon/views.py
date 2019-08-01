@@ -4,6 +4,11 @@ from django.views.generic import ListView, DetailView, TemplateView
 from django.db.models import Q
 from .models import Species, Ability, Move, LearnableMove, LevelMove, Location
 
+from simple_rest_client.api import API
+import requests
+import json
+import time
+
 # root page: shows latest added Pokemon.
 
 
@@ -91,3 +96,56 @@ def filterType(dataset, args):
 
 def filterAbility(dataset):
     print("Filtering on ability...")
+
+class ScrapeMoves(TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        print("Getting moves...")
+        api_request = "https://pokeapi.co/api/v2/move/"
+        for _ in range (1, 728):
+            api = API(
+                api_root_url=api_request + _.__str__(),
+                append_slash=True,
+                json_encode_body=True,
+            )
+            response = requests.get(api.api_root_url)
+            json_obj = json.loads(response.text)
+            d = {}
+            d["name"] = titlefy_name(json_obj["name"])
+            d["type"] = Move.typeID(titlefy_name(json_obj["type"]["name"]))
+            d["desc"] = cleanse_text(json_obj["flavor_text_entries"][2]["flavor_text"])
+            d["acc"] = json_obj["accuracy"]
+            d["power"] = json_obj["power"]
+            d["category"] = Move.categoryID(titlefy_name(json_obj["damage_class"]["name"]))
+
+            try:
+                m = Move.objects.get(move_name=d["name"])
+                print("Move already existed - updating type and stuff")
+                if (m.move_type != Move.typeID("Cyber")):
+                    print("Move not Cyber!")
+                    m.move_type = d["type"]
+                    m.move_category = d["category"]
+                    m.save()
+                    
+            except:
+                m = Move(
+                    move_name=d["name"],
+                    move_type=d["type"],
+                    move_desc=d["desc"],
+                    base_power=d["power"],
+                    base_accuracy=d["acc"],
+                    move_category=d["category"]
+                )
+                m.save()
+                print(m)
+            time.sleep(0.5)
+
+        return HttpResponseRedirect('/')
+    
+def titlefy_name(input):
+    output = input.replace("-", " ").title()
+    return output
+
+def cleanse_text(input):
+    output = input.replace("\n", " ")
+    return output

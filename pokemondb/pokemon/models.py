@@ -219,6 +219,14 @@ class Move(models.Model):
     def move_category_string(self):
         return self.get_move_category_display()
 
+    def typeID(long_name):
+        right_id = [k for k, v in TYPES if v == long_name]
+        return right_id[0]
+
+    def categoryID(long_name):
+        right_id = [k for k, v in MOVE_CATEGORIES if v == long_name]
+        return right_id[0]
+
 class LearnableMove(models.Model):
     move = models.ForeignKey(
         'Move',

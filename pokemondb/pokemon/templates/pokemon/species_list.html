@@ -11,4 +11,5 @@
 {% else %}
     <p>No Pokemon matching that description could be found.</p>
 {% endif %}
+    <a href="{% url 'pokemondb:get_api_moves' %}">Click to get moves!</a>
 {% endblock content %}
