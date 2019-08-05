@@ -80,7 +80,8 @@ def filterSearch(searchterm):
     for s in searches:
         if len(s) > 1:
             func = switcher.get(s[0])
-            returnvalue = func(returnvalue, s[1])
+            returnsource = s[1].replace("_", " ")
+            returnvalue = func(returnvalue, returnsource)
         else:
             returnvalue = returnvalue.filter(species_name=s[0].lower().capitalize())
 
@@ -88,14 +89,20 @@ def filterSearch(searchterm):
     return returnvalue
 
 def filterType(dataset, args):
-    proper_args = args.capitalize()
+    proper_args = args.title()
     searched_type = Species.typeID(proper_args)
     print(dataset.filter(Q(type_primary=searched_type) | Q(type_secondary=searched_type)))
     return dataset.filter(Q(type_primary=searched_type) | Q(type_secondary=searched_type))
 
 
-def filterAbility(dataset):
-    print("Filtering on ability...")
+def filterAbility(dataset, args):
+    proper_args = args.title()
+    print("Filtering on ability..." + proper_args.__str__())
+    searched_ability = Ability.objects.get(ability_name=proper_args)
+    return dataset.filter(Q(ability_1=searched_ability) |
+    Q(ability_2=searched_ability) |
+    Q(hidden_ability=searched_ability)
+    )
 
 class ScrapeMoves(TemplateView):
 
