@@ -98,7 +98,10 @@ def filterType(dataset, args):
 def filterAbility(dataset, args):
     proper_args = args.title()
     print("Filtering on ability..." + proper_args.__str__())
-    searched_ability = Ability.objects.get(ability_name=proper_args)
+    try:
+        searched_ability = Ability.objects.get(ability_name=proper_args)
+    except:
+        return None
     return dataset.filter(Q(ability_1=searched_ability) |
     Q(ability_2=searched_ability) |
     Q(hidden_ability=searched_ability)
